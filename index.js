@@ -9,6 +9,12 @@ app.use(express.json());
 //Creating custom middleware
 app.use(logger)
 
+//Environemnts
+//Development : Run your code as you run it is development
+//Production : To run in production environment : export NODE_ENV=production
+// console.log(`NODE_ENV: ${process.env.NODE_ENV}`);
+// console.log(`app: ${app.get('env')}`);
+
 //Built in middlewares
 app.use(express.json());
 app.use(express.urlencoded({extended: true})); // serving request of url like , key=value&key=value and populates to req.body
@@ -16,7 +22,10 @@ app.use(express.static('public')); // in url just put localhost:3000/readme.txt 
 
 //Third party middlewares
 app.use(helmet());
-app.use(morgan('tiny')); //every time you send request it will log the http request not use in production
+if(app.get('env') === 'development'){
+    app.use(morgan('tiny')); //every time you send request it will log the http request not use in production
+    console.log('Morgan Enabled')
+}
 
 const courses = [
     {id: 1, name: 'course1'},
