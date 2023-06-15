@@ -1,4 +1,6 @@
 const Joi = require('joi');
+const helmet = requre('helmet');
+const morgan = require('morgan');
 const express = require('express');
 const app = express();
 const logger = require('./logger');
@@ -7,10 +9,14 @@ app.use(express.json());
 //Creating custom middleware
 app.use(logger)
 
-app.use(function(req,res,next){
-    console.log('Authenticating...');
-    next();
-})
+//Built in middlewares
+app.use(express.json());
+app.use(express.urlencoded({extended: true})); // serving request of url like , key=value&key=value and populates to req.body
+app.use(express.static('public')); // in url just put localhost:3000/readme.txt it will show this
+
+//Third party middlewares
+app.use(helmet());
+app.use(morgan('tiny')); //every time you send request it will log the http request not use in production
 
 const courses = [
     {id: 1, name: 'course1'},
