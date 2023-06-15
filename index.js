@@ -15,6 +15,10 @@ console.log('Application Name: '+ config.get('name'));
 console.log('Mail Server: '+ config.get('mail.host'));
 console.log('Mail Password: '+ config.get('mail.password')); // when you export 
 
+//Templating Engines (No need while building restful services)
+app.set('view engine', 'pug');
+app.set('views','./views') ; //defualt
+
 //Built in middlewares
 app.use(express.json());
 app.use(express.urlencoded({extended: true})); // serving request of url like , key=value&key=value and populates to req.body
@@ -35,7 +39,8 @@ const courses = [
 ]
 
 app.get('/',(req,res)=>{
-    res.send("Hello World");
+    // res.send("Hello World");
+    res.render('index' ,{title: 'My Express App', message: 'Hello'});
 })
 
 app.get('/api/courses/', (req,res)=>{
@@ -130,14 +135,7 @@ app.delete('/api/courses/:id', (req,res)=>{
     //Return the same course
 })
 
-//When you setup environemnt varible
-// export DEBUG=app:startup -> we only see debugging mesages which we defined
-// if we dont want to get debuggging info the export DEBUG=  we no longer see thir messAGE
-// if we want to see debugging messages of more than one export DEBUG=app:startup,app:db
-// if all then export DEBUG=app:*
-// if you don't want to explicitly set env variables then DEBUG=app:db node index.js
-// prefer debug module over console.log statements
-//Db work
+ 
 dbDebugger('conntected to database')
 app.listen(3000,()=>{
     console.log("sever listening on port 3000")
