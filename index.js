@@ -1,3 +1,5 @@
+const startupDebugger = require('debug')('app:startup');
+const dbDebugger = require('debug')('app:db');
 const Joi = require('joi');
 const config = requre('config');
 const helmet = requre('helmet');
@@ -22,7 +24,7 @@ app.use(express.static('public')); // in url just put localhost:3000/readme.txt 
 app.use(helmet());
 if(app.get('env') === 'development'){
     app.use(morgan('tiny')); //every time you send request it will log the http request not use in production
-    console.log('Morgan Enabled')
+    startupDebugger('Morgan Enabled')
 }
 
 const courses = [
@@ -128,6 +130,15 @@ app.delete('/api/courses/:id', (req,res)=>{
     //Return the same course
 })
 
+//When you setup environemnt varible
+// export DEBUG=app:startup -> we only see debugging mesages which we defined
+// if we dont want to get debuggging info the export DEBUG=  we no longer see thir messAGE
+// if we want to see debugging messages of more than one export DEBUG=app:startup,app:db
+// if all then export DEBUG=app:*
+// if you don't want to explicitly set env variables then DEBUG=app:db node index.js
+// prefer debug module over console.log statements
+//Db work
+dbDebugger('conntected to database')
 app.listen(3000,()=>{
     console.log("sever listening on port 3000")
 });
