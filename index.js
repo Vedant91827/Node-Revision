@@ -1,4 +1,5 @@
 const Joi = require('joi');
+const config = requre('config');
 const helmet = requre('helmet');
 const morgan = require('morgan');
 const express = require('express');
@@ -6,14 +7,11 @@ const app = express();
 const logger = require('./logger');
 app.use(express.json()); 
 
-//Creating custom middleware
-app.use(logger)
 
-//Environemnts
-//Development : Run your code as you run it is development
-//Production : To run in production environment : export NODE_ENV=production
-// console.log(`NODE_ENV: ${process.env.NODE_ENV}`);
-// console.log(`app: ${app.get('env')}`);
+//Configuration
+console.log('Application Name: '+ config.get('name'));
+console.log('Mail Server: '+ config.get('mail.host'));
+console.log('Mail Password: '+ config.get('mail.password')); // when you export 
 
 //Built in middlewares
 app.use(express.json());
@@ -49,13 +47,6 @@ app.post('/api/courses',(req,res)=>{
     }
 
     const result = Joi.validate(req.body,schema);
-    // console.log(result);
-
-    // if(!req.body.name || req.body.name.length < 3){
-    //     // 400 Bad Request
-    //     res.status(400).send("Name is required and should be minimum 3 characters")
-    //     return;
-    // }
 
     if(result.error){
         res.status(400).send(result.error.details[0].message);
